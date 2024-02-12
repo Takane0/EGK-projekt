@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 public class Player : KinematicBody
@@ -8,6 +9,7 @@ public class Player : KinematicBody
     Spatial head;
     Camera camera;
 
+    // basic variables needed for movement
     [Export]
     float speed = 15.0f;
     [Export]
@@ -21,15 +23,47 @@ public class Player : KinematicBody
     [Export]
     float friction = 10.5f;
     [Export]
+    int accel;
 
+    // calculating character damage while including strength stat
+    private float _strength = 0;
+    public float strength
+    {
+        get { return _strength; }
+        set
+        {
+            _strength = value;
+            RecalculateDamage();
+        }
+    }
+
+    private float _damage;
+    public float damage
+    {
+        get { return _damage; }
+        set { _damage = value; }
+    }
+
+    public Player()
+    {
+        RecalculateDamage(); // Initial calculation
+    }
+
+    private void RecalculateDamage()
+    {
+        _damage = 10 + _strength;
+    }
+
+    // declaring important nodes
+    private AnimationPlayer meleeAnim;
+    private Area hitbox;
     Vector3 snap;
     Vector3 direction = new Vector3();
     Vector3 velocity = new Vector3();
     Vector3 gravity_vec = new Vector3();
     Vector3 movement = new Vector3();
 
-    int accel;
-
+    // Initially loaded stuff
     public override void _Ready()
     {
         accel_type.Add("default", 7);
@@ -37,10 +71,13 @@ public class Player : KinematicBody
         accel = accel_type["default"];
         head = GetNode<Spatial>("Head");
         camera = GetNode<Spatial>("Head").GetChild<Camera>(0);
+        meleeAnim = GetNode<AnimationPlayer>("AnimationPlayer");
+        hitbox = GetNode<Area>("Head/Camera/Hitbox");
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
+    // formula that allows movement relative to camera
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseMotion mouseMotion)
@@ -53,6 +90,31 @@ public class Player : KinematicBody
         }
     }
 
+    public void Melee()
+    {
+        if (Input.IsActionJustPressed("hit"))
+        {
+            if (!meleeAnim.IsPlaying())
+            {
+                meleeAnim.Play("Attack");
+                meleeAnim.Queue("Return");
+            }
+        }
+
+        //if (meleeAnim.CurrentAnimation == "Attack")
+        //{
+        //    foreach (Node2D body in hitbox.GetOverlappingBodies())
+        //    {
+        //        if (body.IsInGroup("Enemy"))
+        //        {
+
+        //            (body as Enemy).Health -= damage;
+        //        }
+        //    }
+        //}
+    }
+
+    // processing movement (and some extra stuff(?))
     public override void _Process(float delta)
     {
         if (Engine.GetFramesPerSecond() > Engine.IterationsPerSecond)
@@ -75,7 +137,7 @@ public class Player : KinematicBody
         {
             camera.SetAsToplevel(false);
             camera.GlobalTransform = head.GlobalTransform;
-        }
+        }       
     }
 
     public override void _PhysicsProcess(float delta)
@@ -120,5 +182,6 @@ public class Player : KinematicBody
         movement = velocity + gravity_vec;
 
         MoveAndSlideWithSnap(movement, snap, Vector3.Up);
-    }
+        Melee();
+    }    
 }

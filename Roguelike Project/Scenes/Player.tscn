@@ -1,10 +1,65 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scripts/Player.cs" type="Script" id=1]
+[ext_resource path="res://Assets/Sword_texture.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sword.obj" type="ArrayMesh" id=3]
 
 [sub_resource type="CapsuleMesh" id=1]
 
 [sub_resource type="CapsuleShape" id=2]
+
+[sub_resource type="BoxShape" id=3]
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "Attack"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Head/Camera/Weapon:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( -70, 10, 10 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Head/Camera/Weapon:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "Return"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Head/Camera/Weapon:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -70, 10, 10 ), Vector3( 0, 0, 0 ) ]
+}
 
 [node name="Player" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.833811, 0 )
@@ -22,3 +77,23 @@ shape = SubResource( 2 )
 
 [node name="Camera" type="Camera" parent="Head"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03769, 0 )
+
+[node name="Hitbox" type="Area" parent="Head/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.49605 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Head/Camera/Hitbox"]
+transform = Transform( -5.24537e-08, 0, 1, 0, 1, 0, -1.2, 0, -4.37114e-08, 0, -0.629075, 0.470245 )
+shape = SubResource( 3 )
+
+[node name="Weapon" type="Spatial" parent="Head/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.682534, -0.595304, -0.934343 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Head/Camera/Weapon"]
+transform = Transform( -3.0598e-09, 0, 0.07, 0, 0.06, 0, -0.07, 0, -3.0598e-09, 0, 0, 0 )
+mesh = ExtResource( 3 )
+material/0 = SubResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack = SubResource( 5 )
+anims/RESET = SubResource( 6 )
+anims/Return = SubResource( 7 )
