@@ -1,6 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Room.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/Mob.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/GreenHp.cs" type="Script" id=4]
+[ext_resource path="res://Scenes/RedHp.cs" type="Script" id=5]
+[ext_resource path="res://Scenes/DeathScreen.cs" type="Script" id=6]
+[ext_resource path="res://Scenes/PlayerHp.cs" type="Script" id=7]
+[ext_resource path="res://Scenes/EscapeMenu.cs" type="Script" id=8]
+[ext_resource path="res://Scenes/Continue.cs" type="Script" id=9]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -11,10 +19,21 @@ roughness = 0.85
 
 [sub_resource type="BoxShape" id=3]
 
+[sub_resource type="Curve3D" id=4]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, -29.6892, 0.902241, -29.4609, 0, 0, 0, 0, 0, 0, 29.3797, 0.428687, -29.642, 0, 0, 0, 0, 0, 0, 29.8547, 0, 29.4118, 0, 0, 0, 0, 0, 0, -29.5415, 0.356129, 28.5887, 0, 0, 0, 0, 0, 0, -29.6842, 0.915113, -29.4588 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0 )
+}
+
 [node name="Room" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -30.202, 0, -29.992 )
+script = ExtResource( 2 )
+MobScene = ExtResource( 3 )
 
 [node name="StaticBody" type="StaticBody" parent="."]
 transform = Transform( 30, 0, 0, 0, 0.1, 0, 0, 0, 30, 0, 0, 0 )
+collision_layer = 4
+collision_mask = 0
 
 [node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
 mesh = SubResource( 1 )
@@ -23,5 +42,117 @@ material/0 = SubResource( 2 )
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 3 )
 
-[node name="KinematicBody" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.08113, 1.77769, 0.415703 )
+[node name="Player" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25.8749, 1.87816, 28.5595 )
+
+[node name="Spatial" type="Spatial" parent="."]
+
+[node name="spawnpath" type="Path" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.269325, 0.201717, -0.206627 )
+curve = SubResource( 4 )
+
+[node name="spawnlocation" type="PathFollow" parent="spawnpath"]
+transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, -29.6892, 0.902241, -29.4609 )
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 0.049
+anchor_bottom = 0.099
+margin_right = 973.824
+margin_bottom = 540.6
+
+[node name="RedHp" type="ColorRect" parent="Control"]
+margin_left = 29.0
+margin_top = 505.0
+margin_right = 203.0
+margin_bottom = 561.0
+color = Color( 1, 0, 0, 1 )
+script = ExtResource( 5 )
+
+[node name="GreenHp" type="ColorRect" parent="Control"]
+unique_name_in_owner = true
+margin_left = 29.0
+margin_top = 505.0
+margin_right = 203.0
+margin_bottom = 561.0
+color = Color( 0.0313726, 1, 0, 1 )
+script = ExtResource( 4 )
+
+[node name="DeathScreen" type="ColorRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.470588 )
+script = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="Control/DeathScreen"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -74.0
+margin_top = -28.0
+margin_right = 74.0
+margin_bottom = 28.0
+text = "Press enter to try again"
+
+[node name="EscapeMenu" type="ColorRect" parent="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.392157 )
+script = ExtResource( 8 )
+
+[node name="Button" type="Button" parent="Control/EscapeMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -25.0
+margin_right = 150.0
+margin_bottom = 25.0
+text = "Restart"
+
+[node name="Button2" type="Button" parent="Control/EscapeMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = 50.0
+margin_right = 150.0
+margin_bottom = 100.0
+text = "Quit"
+
+[node name="Continue" type="Button" parent="Control/EscapeMenu"]
+light_mask = 0
+anchor_left = 0.354
+anchor_top = 0.333
+anchor_right = 0.646
+anchor_bottom = 0.417
+margin_left = -0.496002
+margin_top = 0.199997
+margin_right = 0.495972
+margin_bottom = -0.200012
+action_mode = 0
+text = "continue"
+script = ExtResource( 9 )
+
+[node name="Label" type="Label" parent="."]
+modulate = Color( 0, 0, 0, 1 )
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+anchor_top = 12.0
+anchor_right = 4.85
+anchor_bottom = 13.075
+margin_left = 29.0
+margin_top = -6693.0
+margin_right = -4762.4
+margin_bottom = -7286.0
+text = "100/100"
+align = 1
+valign = 1
+script = ExtResource( 7 )
+
+[connection signal="pressed" from="Control/EscapeMenu/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Control/EscapeMenu/Button2" to="Player" method="_on_Button2_pressed"]
+[connection signal="pressed" from="Control/EscapeMenu/Continue" to="Player" method="_on_Continue_pressed"]

@@ -14,6 +14,12 @@ config/name="Roguelike Project"
 run/main_scene="res://Scenes/Room.tscn"
 config/icon="res://icon.png"
 
+[global]
+
+colli=false
+collis=false
+col=false
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
@@ -55,6 +61,18 @@ hit={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+mouse={
+"deadzone": 0.5,
+"events": [  ]
+}
+
+[layer_names]
+
+3d_physics/layer_1="player"
+3d_physics/layer_2="enemies"
+3d_physics/layer_3="world"
+3d_physics/layer_4="items"
+3d_physics/layer_6="dead"
 
 [mono]
 

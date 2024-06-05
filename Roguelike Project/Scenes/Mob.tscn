@@ -1,0 +1,83 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://image/Wizard.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://Scenes/Mob.cs" type="Script" id=2]
+[ext_resource path="res://image/tcg-alt-art-cartesia-leak-v0-xjb6fza7kmxc1.webp" type="Texture" id=3]
+[ext_resource path="res://Scenes/SwordTest.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Skin" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="SpatialMaterial" id=7]
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="CylinderShape" id=1]
+height = 4.60664
+radius = 1.23462
+
+[sub_resource type="BoxShape" id=8]
+extents = Vector3( 32.7436, 12.2624, 26.816 )
+
+[sub_resource type="Curve3D" id=9]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, 19.9871, -12.6786, 4.01341, 0, 0, 0, 0, 0, 0, -16.6928, -6.88475, -1.15909, 0, 0, 0, 0, 0, 0, -12.3455, 4.43673, 9.45956, 0, 0, 0, 0, 0, 0, 20.8781, 2.16425, 16.6238, 0, 0, 0, 0, 0, 0, 20.0081, -12.6581, 4.0362, 0, 0, 0, 0, 0, 0, 19.9871, -12.6786, 4.01341 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0, 0 )
+}
+
+[node name="Mob" type="KinematicBody" groups=["enemies"]]
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 3.802, 0, -1.702 )
+collision_layer = 2
+collision_mask = 0
+input_ray_pickable = false
+script = ExtResource( 2 )
+SwordTestScene = ExtResource( 4 )
+
+[node name="pivot" type="Spatial" parent="."]
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.626, 0.049, 0.00599998 )
+
+[node name="Wizard" type="MeshInstance" parent="pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+mesh = ExtResource( 1 )
+skin = SubResource( 2 )
+material/0 = SubResource( 3 )
+material/1 = SubResource( 4 )
+material/2 = SubResource( 5 )
+material/3 = SubResource( 6 )
+material/4 = SubResource( 7 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.5, 0 )
+shape = SubResource( 1 )
+
+[node name="Detector" type="Area" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape" type="CollisionShape" parent="Detector"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.5, 0 )
+shape = SubResource( 1 )
+
+[node name="Agro" type="Area" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Agro"]
+shape = SubResource( 8 )
+
+[node name="Item" type="Path" parent="."]
+curve = SubResource( 9 )
+
+[node name="ItemLocation" type="PathFollow" parent="Item"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.97199, -5.79969, 5.10625 )
+
+[connection signal="body_entered" from="Detector" to="." method="_on_Detector_body_entered"]
+[connection signal="body_entered" from="Agro" to="." method="_on_Agro_body_entered"]
+[connection signal="body_exited" from="Agro" to="." method="_on_Agro_body_exited"]
