@@ -45,9 +45,9 @@ public class Mob : KinematicBody
     }
     private void Die()
     {
-        SwordTestSpawn();
+        //SwordTestSpawn();
         _velocity= Vector3.Zero;
-        //QueueFree();
+        QueueFree();
     }
     public void _on_Detector_body_entered(Node body)
     {
@@ -61,9 +61,9 @@ public class Mob : KinematicBody
             Die();
         }
     }
-    public void SwordTestSpawn()
-    {
-        SwordTest swordTest = (SwordTest)SwordTestScene.Instance();
-        AddChild(swordTest);
-    }
+    //public void SwordTestSpawn()
+    //{
+    //    SwordTest swordTest = (SwordTest)SwordTestScene.Instance();
+    //    AddChild(swordTest);
+    //}
 }

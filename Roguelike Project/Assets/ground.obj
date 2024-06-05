@@ -1,0 +1,26 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v4.1.0)
+
+mtllib yc0tib8kp32m.mtl
+
+# 4 vertex positions
+v  -2 0 2
+v  2 0 2
+v  -2 0 -2
+v  2 0 -2
+
+# 4 UV coordinates
+vt 0.5117485523223877 0.01174864545464516 0
+vt 0.5575873255729675 0.01174864545464516 0
+vt 0.5117485523223877 0.05758737772703171 0
+vt 0.5575873255729675 0.05758737772703171 0
+
+# 1 vertex normals
+vn 0 1 0
+
+# Mesh 'Ground_01' with 2 faces
+g Ground_01
+usemtl Dungeon_Mat_01
+f  1/1/1 2/2/1 3/3/1
+f  3/3/1 2/2/1 4/4/1
+
